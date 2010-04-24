@@ -1,3 +1,3 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Notify extends Kohana_Notify {}
+class Notify extends Notify_Core {}
