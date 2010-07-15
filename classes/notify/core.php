@@ -42,6 +42,26 @@ class Notify_Core
 	private static $view					= NULL;
 
 	/**
+	 * Stores if should always use persistent messages
+	 * 
+	 * (default value: NULL)
+	 * 
+	 * @var boolean
+	 * @access private
+	 */
+	private static $persistent_messages		= NULL;
+
+	/**
+	 * Stores the session name to store persistent messages
+	 * 
+	 * (default value: NULL)
+	 * 
+	 * @var string
+	 * @access private
+	 */
+	private static $session_name			= NULL;
+
+	/**
 	 * Stores the default message type
 	 * 
 	 * (default value: NULL)
@@ -60,7 +80,7 @@ class Notify_Core
 	 * @param string $type. (default: 'information')
 	 * @return chainable
 	 */
-	public static function msg($msg, $type = NULL)
+	public static function msg($msg, $type = NULL, $session = FALSE)
 	{
 		// If we receive a message with no type
 		if (is_null($type))
@@ -78,6 +98,7 @@ class Notify_Core
 		{
 			$type = trim($type);
 		}
+		
 		// Force casting and sanitizing
 		$msg = trim($msg);
 
@@ -89,10 +110,54 @@ class Notify_Core
 		}
 		
 		self::$msgs[$type][] = $msg;
+
+
+		// If we haven't assigned a value for $persistent_messages		
+		if (is_null(self::$persistent_messages))
+		{
+			// Get value from config file
+			self::restore_persistent_messages();
+		}
+
+		// Check if message should be stored in session.
+		if (self::$persistent_messages OR $session)
+		{
+			// Store the message in a session for later retrieval
+			self::add_message_to_session($msg, $type);
+		}
 		
 		// Make it chainable
 		return self::return_instance();
 	}
+	
+	/**
+	 * Sets the persistent_messages		
+	 * 
+	 * @access public
+	 * @static
+	 * @param boolean $value (example: 'error')
+	 * @return chainable
+	 */
+	public static function persistent_messages($value = FALSE)
+	{
+		self::$persistent_messages		 = $value;
+		return self::return_instance();
+	}
+
+	/**
+	 * Restores the persistent_messages to the configuration file
+	 * 
+	 * @access public
+	 * @static
+	 * @return chainable
+	 */
+	public static function restore_persistent_messages()
+	{
+		// Get value from config file
+		self::$persistent_messages = trim(Kohana::config('notify.persistent_messages'));
+		return self::return_instance();
+	}
+
 
 	/**
 	 * Sets the default message type
@@ -154,6 +219,9 @@ class Notify_Core
 			self::$view = Kohana::config('notify.view');
 		}
 		
+		// Merge session messages with normal ones
+		self::merge_session_messages();
+		
 		// If it's valid $message_type received, we should only render the messages of that type
 		if ( ! is_null($message_type) AND array_key_exists($message_type, self::$msgs))
 		{
@@ -170,6 +238,67 @@ class Notify_Core
 
 		// Return the rendered messages
 		return $messages;
+	}
+
+	/**
+	 * retrieves session name
+	 *
+	 */
+	private static function get_session_name()
+	{
+		// If we haven't assigned a default session name
+		if (is_null(self::$session_name))
+		{
+			// Get value from config file
+			self::$session_name = trim(Kohana::config('notify.session_name'));
+		}
+		
+		return self::$session_name;
+	}
+	
+	/**
+	 * Add message into session
+	 *
+	 */
+	private static function add_message_to_session($msg, $type)
+	{
+		$session_msgs = Session::instance()->get(self::get_session_name(), array());
+		$session_msgs[$type][] = $msg;
+		Session::instance()->set(self::get_session_name(), $session_msgs);
+	}
+
+	/**
+	 * Merge session messages into the regular messages 
+	 *
+	 */
+	private static function merge_session_messages()
+	{
+		// Extract session messages
+		$session_msgs = Session::instance()->get(self::get_session_name(), array());
+		
+		// Delete session
+		Session::instance()->delete(self::get_session_name());
+
+		foreach($session_msgs as $message_type => $msgs)
+		{
+			if (array_key_exists($message_type, self::$msgs))
+			{
+				// Merge carefully to avoid dups
+				foreach($msgs as $msg)
+				{
+					// Search session message in regular messages.
+					if( ! in_array($msg, self::$msgs[$message_type]))
+					{
+						self::$msgs[$message_type][] = $msg;
+					}
+				}
+			}
+			else
+			{
+				// plain assignment
+				self::$msgs[$message_type] = $session_msgs[$message_type];
+			}
+		}
 	}
 
 	/**

@@ -2,5 +2,12 @@
 
 return array(
 	'default_message_type'	=> 'default',
-	'view'					=> 'notify/notify',
+	'view'					=> 'notify/jqueryui',
+	
+	// By default, should notify always create 
+	// persistent messages (via session)?
+	'persistent_messages'	=> FALSE,
+	
+	// Session name for the persistent messages
+	'session_name'			=> 'notify_messages',
 );

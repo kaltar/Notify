@@ -48,6 +48,47 @@ Notify::restore_default_message_type() will restore the default message type to 
 	// The following message will be type 'default'
 	Notify::msg('The weather today is cool');
 
+
+### Persistent Messages
+
+Persistent messages are useful for displaying notices after a redirect. This messages are stored in a session, and will be retrieved on the next render() called, even if it's on another request (a different page). Once they are displayed via render, all messages in the session are deleted.
+The default value of this behavior is set in the config file:
+
+		
+	// By default, should notify always create 
+	// persistent messages (via session)?
+	'persistent_messages'	=> FALSE,
+
+Similarly to the default message type, Notify will change the default value for the use of persistent messages, and will add to a session all the messages that are added **AFTER** Notify::persistent_messages is called.
+Notify::restore_persistent_messages() will restore the default message type to the one set on the config file.
+
+	// The following message will be type persistent or not persistent as config file says
+	Notify::msg('The astronauts are entering the spaceship');
+	
+	// Change default
+	Notify::persistent_messages(TRUE);
+	
+	// The following will be stored in a session
+	Notify::msg('The spaceship fuel is low');
+	
+	// Change default
+	Notify::persistent_messages(FALSE;
+
+	// This message will NOT be stored in the session
+	Notify::msg('The spaceship is about to explode!','alert');
+
+
+If you require a single message to be persistent, without calling Notify::persistent_messages(TRUE); you can add the parameter when calling the msg() method. Asuming that on config persistent_messages = FALSE, we have that:
+
+	Notify::msg('this is not persistent');
+	
+	Notify::msg('this is still not persistent','warning');
+	
+	Notify::msg('this IS persistent','warning', TRUE);
+	
+	Notify::msg('this IS persistent', NULL, TRUE);
+
+
 ### Changing the view
 
 Changes the view to be used for rendering the messages.
@@ -63,7 +104,12 @@ It's usefull for rendering inside a controller view that needs to change the def
 
 All methods are chainable, with the exception of render.
 
-	Notify::default_message_type('warning')->view('notify/space_alert')->msg('Approaching black hole')->render();
+	Notify::default_message_type('warning')
+		->view('notify/space_alert')
+		->msg('Approaching black hole')
+		->msg('Almost there')
+		->msg('We are dead','failed')
+		->render();
 
 
 For the suggested use of Notify, please read the [Implementation Guide](notify.implementation)

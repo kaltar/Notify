@@ -15,7 +15,7 @@
 		default:
 			$class	= 'ui-state-highlight';
 			$icon	= 'ui-icon-info';
-			$title	= $msg_type;
+			$title	= ucwords($msg_type);
 		break;
 	}
 	?>
