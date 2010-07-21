@@ -76,11 +76,11 @@ class Notify_Core
 	 * 
 	 * @access public
 	 * @static
-	 * @param string $msg
+	 * @param string or array $msgs 
 	 * @param string $type. (default: 'information')
 	 * @return chainable
 	 */
-	public static function msg($msg, $type = NULL, $session = FALSE)
+	public static function msg($msgs, $type = NULL, $session = FALSE)
 	{
 		// If we receive a message with no type
 		if (is_null($type))
@@ -99,9 +99,6 @@ class Notify_Core
 			$type = trim($type);
 		}
 		
-		// Force casting and sanitizing
-		$msg = trim($msg);
-
 		// See if we do not already have a key for that type of message
 		// initialize the array
 		if ( ! array_key_exists($type, self::$msgs))
@@ -109,23 +106,35 @@ class Notify_Core
 			self::$msgs[$type] = array();
 		}
 		
-		self::$msgs[$type][] = $msg;
-
-
-		// If we haven't assigned a value for $persistent_messages		
-		if (is_null(self::$persistent_messages))
+		// make array
+		if ( ! is_array($msgs))
 		{
-			// Get value from config file
-			self::restore_persistent_messages();
-		}
-
-		// Check if message should be stored in session.
-		if (self::$persistent_messages OR $session)
-		{
-			// Store the message in a session for later retrieval
-			self::add_message_to_session($msg, $type);
+			$msgs = array($msgs);
 		}
 		
+		// loop thru array
+		foreach($msgs as  $msg)
+		{
+			// Force casting and sanitizing
+			$msg = trim($msg);
+			
+			self::$msgs[$type][] = $msg;
+	
+			// If we haven't assigned a value for $persistent_messages		
+			if (is_null(self::$persistent_messages))
+			{
+				// Get value from config file
+				self::restore_persistent_messages();
+			}
+	
+			// Check if message should be stored in session.
+			if (self::$persistent_messages OR $session)
+			{
+				// Store the message in a session for later retrieval
+				self::add_message_to_session($msg, $type);
+			}
+		}
+				
 		// Make it chainable
 		return self::return_instance();
 	}
