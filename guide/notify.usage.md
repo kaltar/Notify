@@ -49,6 +49,11 @@ Notify::restore_default_message_type() will restore the default message type to 
 	Notify::msg('The weather today is cool');
 
 
+Notify does accept an array of messages as the argument:
+
+	Notify::msg(array('The weather today is cool', 'and you should get an tan'));
+
+
 ### Persistent Messages
 
 Persistent messages are useful for displaying notices after a redirect. This messages are stored in a session, and will be retrieved on the next render() called, even if it's on another request (a different page). Once they are displayed via render, all messages in the session are deleted.
