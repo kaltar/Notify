@@ -253,7 +253,7 @@ class Notify_Core
 	 * retrieves session name
 	 *
 	 */
-	private static function get_session_name()
+	protected static function get_session_name()
 	{
 		// If we haven't assigned a default session name
 		if (is_null(self::$session_name))
@@ -269,7 +269,7 @@ class Notify_Core
 	 * Add message into session
 	 *
 	 */
-	private static function add_message_to_session($msg, $type)
+	protected static function add_message_to_session($msg, $type)
 	{
 		$session_msgs = Session::instance()->get(self::get_session_name(), array());
 		$session_msgs[$type][] = $msg;
@@ -280,7 +280,7 @@ class Notify_Core
 	 * Merge session messages into the regular messages 
 	 *
 	 */
-	private static function merge_session_messages()
+	protected static function merge_session_messages()
 	{
 		// Extract session messages
 		$session_msgs = Session::instance()->get(self::get_session_name(), array());
