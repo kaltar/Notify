@@ -315,7 +315,7 @@ class Notify_Core
 	 *
 	 * @return  Kohana_Notify
 	 */
-	private static function return_instance()
+	protected static function return_instance()
 	{
 		if (self::$instance === NULL)
 		{
