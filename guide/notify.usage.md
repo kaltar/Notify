@@ -129,7 +129,7 @@ It's usefull for rendering inside a controller view that needs to change the def
 
 ### Chainable
 
-All methods are chainable, with the exception of render.
+All methods are chainable, with the exception of render() and count().
 
 	Notify::default_message_type('warning')
 		->view('notify/space_alert')
