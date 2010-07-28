@@ -54,6 +54,28 @@ Notify does accept an array of messages as the argument:
 	Notify::msg(array('The weather today is cool', 'and you should get an tan'));
 
 
+### Counting messages
+
+Notify::count($msg_type) returns the number of messages stored of type $msg_type. Do not set $msg_type for a count of all messages
+
+	
+	Notify::msg('a message','default');
+	Notify::msg('a message','default');
+	Notify::msg('a message','warning');	
+	
+	// Return the number of messages
+	echo Notify::count(); // 3
+	
+	// Return the number of messages of type 'default'
+	echo Notify::count('default'); // 2
+
+	// Return the number of messages of type 'warning'
+	echo Notify::count('warning'); // 1
+
+	// Return the number of messages of type 'kohana'
+	echo Notify::count('kohana'); // 0
+
+
 ### Persistent Messages
 
 Persistent messages are useful for displaying notices after a redirect. This messages are stored in a session, and will be retrieved on the next render() called, even if it's on another request (a different page). Once they are displayed via render, all messages in the session are deleted.
