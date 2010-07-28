@@ -19,17 +19,17 @@ class Notify_Core
  	 * (default value: NULL)
  	 *
 	 * @var mixed
-	 * @access private
+	 * @access protected
 	 */
-	private static $instance				= NULL;
+	protected static $instance				= NULL;
 
 	/**
 	 * 2-D Array storing message type($key) and messages ($value = array)
 	 * 
 	 * @var array
-	 * @access private
+	 * @access protected
 	 */
-	private static $msgs					= array(); 
+	protected static $msgs					= array(); 
 
 	/**
 	 * Stores the view to render the notices
@@ -37,9 +37,9 @@ class Notify_Core
 	 * (default value: NULL)
 	 * 
 	 * @var string
-	 * @access private
+	 * @access protected
 	 */
-	private static $view					= NULL;
+	protected static $view					= NULL;
 
 	/**
 	 * Stores if should always use persistent messages
@@ -47,9 +47,9 @@ class Notify_Core
 	 * (default value: NULL)
 	 * 
 	 * @var boolean
-	 * @access private
+	 * @access protected
 	 */
-	private static $persistent_messages		= NULL;
+	protected static $persistent_messages		= NULL;
 
 	/**
 	 * Stores the session name to store persistent messages
@@ -57,9 +57,9 @@ class Notify_Core
 	 * (default value: NULL)
 	 * 
 	 * @var string
-	 * @access private
+	 * @access protected
 	 */
-	private static $session_name			= NULL;
+	protected static $session_name			= NULL;
 
 	/**
 	 * Stores the default message type
@@ -67,9 +67,9 @@ class Notify_Core
 	 * (default value: NULL)
 	 * 
 	 * @var string
-	 * @access private
+	 * @access protected
 	 */
-	private static $default_message_type	= NULL;
+	protected static $default_message_type	= NULL;
 	
 	/**
 	 * Stores the message in an array
@@ -308,6 +308,32 @@ class Notify_Core
 				self::$msgs[$message_type] = $session_msgs[$message_type];
 			}
 		}
+	}
+
+	/**
+	 * Get the number of messages stored.
+	 *
+	 * @return integer
+	 */
+	public static function count($type = NULL)
+	{
+		$msg_count = 0;
+		
+		// If requested a especific message type.	
+		if ( ! empty($type) AND array_key_exists($type, self::$msgs))
+		{
+			$msg_count = count(self::$msgs[$type]);
+		}
+		else if (empty($type))
+		{
+			// Get the count of all messages
+			foreach (self::$msgs as $type_msgs)
+			{
+				$msg_count += (is_array($type_msgs) ? count($type_msgs) : 0);
+			}
+		}
+		
+		return $msg_count;
 	}
 
 	/**
