@@ -1,6 +1,6 @@
 <?php foreach ($msgs as $msg_type => $msgs_of_type): ?>
 	<?php 
-	switch ($msg_type) 
+	switch (strtolower($msg_type))
 	{
 		case 'error':
 			$class	= 'ui-state-error';

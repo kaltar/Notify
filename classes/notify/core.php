@@ -49,7 +49,7 @@ class Notify_Core
 	 * @var boolean
 	 * @access protected
 	 */
-	protected static $persistent_messages		= NULL;
+	protected static $persistent_messages	= NULL;
 
 	/**
 	 * Stores the session name to store persistent messages
@@ -113,7 +113,7 @@ class Notify_Core
 		}
 		
 		// loop thru array
-		foreach($msgs as  $msg)
+		foreach ($msgs as  $msg)
 		{
 			// Force casting and sanitizing
 			$msg = trim($msg);
