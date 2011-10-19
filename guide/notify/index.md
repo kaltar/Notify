@@ -7,9 +7,9 @@ This is where Notify comes in.
 
 Notify is a simple Kohana 3 module designed to capture messages from different methods and modules to be displayed later with a unified look and feel.
 
-1.	[Installation](notify.installation)
-2.  [Usage Instructions](notify.usage)
-3.  [Implementation Guide](notify.implementation)
+1.	[Installation](installation)
+2.  [Usage Instructions](usage)
+3.  [Implementation Guide](implementation)
 
 
 The latest source files can be downloaded from [github](http://github.com/kaltar/notify).

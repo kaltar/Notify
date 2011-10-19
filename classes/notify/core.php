@@ -89,7 +89,7 @@ class Notify_Core
 			if (is_null(self::$default_message_type))
 			{
 				// Get value from config file
-				self::$default_message_type = trim(Kohana::config('notify.default_message_type'));
+				self::$default_message_type = trim(Kohana::$config->load('notify.default_message_type'));
 			}
 			// Assign value
 			$type = self::$default_message_type;
@@ -163,7 +163,7 @@ class Notify_Core
 	public static function restore_persistent_messages()
 	{
 		// Get value from config file
-		self::$persistent_messages = trim(Kohana::config('notify.persistent_messages'));
+		self::$persistent_messages = trim(Kohana::$config->load('notify.persistent_messages'));
 		return self::return_instance();
 	}
 
@@ -192,7 +192,7 @@ class Notify_Core
 	public static function restore_default_message_type()
 	{
 		// Get value from config file
-		self::$default_message_type = trim(Kohana::config('notify.default_message_type'));
+		self::$default_message_type = trim(Kohana::$config->load('notify.default_message_type'));
 		return self::return_instance();
 	}
 	
@@ -225,7 +225,7 @@ class Notify_Core
 		// If view is not assigned, get from config file
 		if (is_null(self::$view))
 		{
-			self::$view = Kohana::config('notify.view');
+			self::$view = Kohana::$config->load('notify.view');
 		}
 		
 		// Merge session messages with normal ones
@@ -259,7 +259,7 @@ class Notify_Core
 		if (is_null(self::$session_name))
 		{
 			// Get value from config file
-			self::$session_name = trim(Kohana::config('notify.session_name'));
+			self::$session_name = trim(Kohana::$config->load('notify.session_name'));
 		}
 		
 		return self::$session_name;
