@@ -272,7 +272,7 @@ class Notify_Core
 	protected static function add_message_to_session($msg, $type)
 	{
 		$session_msgs = Session::instance()->get(self::get_session_name(), array());
-		$session_msgs[$type][] = $msg;
+		$session_msgs[$type][] = Kohana::$config->load('notify.translate') ? __($msg) : $msg;
 		Session::instance()->set(self::get_session_name(), $session_msgs);
 	}
 
@@ -309,6 +309,19 @@ class Notify_Core
 			}
 		}
 	}
+
+
+	/**
+	 * Clear all messages
+	 * @todo Add type param
+	 * @static
+	 * @return void
+	 */
+	public static function clear() {
+		Session::instance()->delete(self::get_session_name());
+		self::$msgs = array();
+	}
+
 
 	/**
 	 * Get the number of messages stored.
