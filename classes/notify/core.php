@@ -112,11 +112,13 @@ class Notify_Core
 			$msgs = array($msgs);
 		}
 		
-		// loop thru array
+		$do_translate = Kohana::$config->load('notify.translate');
+		
 		foreach ($msgs as  $msg)
 		{
 			// Force casting and sanitizing
 			$msg = trim($msg);
+			$msg = $do_translate ? __($msg) : $msg;
 			
 			self::$msgs[$type][] = $msg;
 	
@@ -272,7 +274,7 @@ class Notify_Core
 	protected static function add_message_to_session($msg, $type)
 	{
 		$session_msgs = Session::instance()->get(self::get_session_name(), array());
-		$session_msgs[$type][] = Kohana::$config->load('notify.translate') ? __($msg) : $msg;
+		$session_msgs[$type][] = $msg;
 		Session::instance()->set(self::get_session_name(), $session_msgs);
 	}
 
