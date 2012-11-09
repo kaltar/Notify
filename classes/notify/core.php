@@ -13,6 +13,11 @@
  */
 class Notify_Core
 {
+	// Named message type constants. Use as the $type param to Notify::msg
+	const ERROR = 'error';
+	const INFO = 'info';
+	const SUCCESS = 'success';
+
 	/**
 	 * Singleton static instance
 	 * 
