@@ -21,7 +21,7 @@ class Notify_Core
 	 * @var mixed
 	 * @access protected
 	 */
-	protected static $instance				= NULL;
+	protected static $instance				= null;
 
 	/**
 	 * 2-D Array storing message type($key) and messages ($value = array)
@@ -39,7 +39,7 @@ class Notify_Core
 	 * @var string
 	 * @access protected
 	 */
-	protected static $view					= NULL;
+	protected static $view					= null;
 
 	/**
 	 * Stores if should always use persistent messages
@@ -49,7 +49,7 @@ class Notify_Core
 	 * @var boolean
 	 * @access protected
 	 */
-	protected static $persistent_messages	= NULL;
+	protected static $persistent_messages	= null;
 
 	/**
 	 * Stores the session name to store persistent messages
@@ -59,7 +59,7 @@ class Notify_Core
 	 * @var string
 	 * @access protected
 	 */
-	protected static $session_name			= NULL;
+	protected static $session_name			= null;
 
 	/**
 	 * Stores the default message type
@@ -69,18 +69,19 @@ class Notify_Core
 	 * @var string
 	 * @access protected
 	 */
-	protected static $default_message_type	= NULL;
-	
+	protected static $default_message_type	= null;
+
 	/**
 	 * Stores the message in an array
-	 * 
+	 *
 	 * @access public
 	 * @static
-	 * @param string or array $msgs 
-	 * @param string $type. (default: 'information')
-	 * @return chainable
+	 * @param string $msgs String or array of messages
+	 * @param string $type Message type (default: 'information')
+	 * @param bool $session
+	 * @return \Notify_Core
 	 */
-	public static function msg($msgs, $type = NULL, $session = FALSE)
+	public static function msg($msgs, $type = null, $session = false)
 	{
 		// If we receive a message with no type
 		if (is_null($type))
@@ -147,9 +148,9 @@ class Notify_Core
 	 * @access public
 	 * @static
 	 * @param boolean $value (example: 'error')
-	 * @return chainable
+	 * @return \Notify_Core
 	 */
-	public static function persistent_messages($value = FALSE)
+	public static function persistent_messages($value = false)
 	{
 		self::$persistent_messages		 = $value;
 		return self::return_instance();
@@ -160,7 +161,7 @@ class Notify_Core
 	 * 
 	 * @access public
 	 * @static
-	 * @return chainable
+	 * @return \Notify_Core
 	 */
 	public static function restore_persistent_messages()
 	{
@@ -172,11 +173,11 @@ class Notify_Core
 
 	/**
 	 * Sets the default message type
-	 * 
+	 *
 	 * @access public
 	 * @static
-	 * @param string $view. (example: 'error')
-	 * @return chainable
+	 * @param string $type
+	 * @return \Notify_Core
 	 */
 	public static function default_message_type($type)
 	{
@@ -189,7 +190,7 @@ class Notify_Core
 	 * 
 	 * @access public
 	 * @static
-	 * @return chainable
+	 * @return \Notify_Core
 	 */
 	public static function restore_default_message_type()
 	{
@@ -204,7 +205,7 @@ class Notify_Core
 	 * @access public
 	 * @static
 	 * @param string $view. (example: 'notify/notify')
-	 * @return chainable
+	 * @return \Notify_Core
 	 */
 	public static function view($view)
 	{
@@ -219,10 +220,10 @@ class Notify_Core
 	 * 
 	 * @access public
 	 * @static
-	 * @param mixed $message_type. (default: NULL)
+	 * @param string|null $message_type. (default: NULL)
 	 * @return string
 	 */
-	public static function render($message_type = NULL)
+	public static function render($message_type = null)
 	{
 		// If view is not assigned, get from config file
 		if (is_null(self::$view))
@@ -252,8 +253,7 @@ class Notify_Core
 	}
 
 	/**
-	 * retrieves session name
-	 *
+	 * Retrieves session name
 	 */
 	protected static function get_session_name()
 	{
@@ -266,10 +266,12 @@ class Notify_Core
 		
 		return self::$session_name;
 	}
-	
+
 	/**
 	 * Add message into session
 	 *
+	 * @param string $msg
+	 * @param string $type
 	 */
 	protected static function add_message_to_session($msg, $type)
 	{
@@ -280,7 +282,6 @@ class Notify_Core
 
 	/**
 	 * Merge session messages into the regular messages 
-	 *
 	 */
 	protected static function merge_session_messages()
 	{
@@ -328,9 +329,10 @@ class Notify_Core
 	/**
 	 * Get the number of messages stored.
 	 *
-	 * @return integer
+	 * @param null|string $type
+	 * @return int
 	 */
-	public static function count($type = NULL)
+	public static function count($type = null)
 	{
 		$msg_count = 0;
 		
@@ -358,7 +360,7 @@ class Notify_Core
 	 */
 	protected static function return_instance()
 	{
-		if (self::$instance === NULL)
+		if (self::$instance === null)
 		{
 			// Assign self
 			self::$instance = new self;
